@@ -1,0 +1,129 @@
+{% extends "base.html" %}
+{% block title %}选手管理 - HLTV 数据管理系统{% endblock %}
+{% block content %}
+    <h1 class="mb-4">选手管理</h1>
+
+    {% if player_to_edit %}
+        <div class="card mb-4">
+            <div class="card-header"><h2>编辑选手</h2></div>
+            <div class="card-body">
+                <form method="POST" action="{{ url_for('edit_player', pid=player_to_edit.pid) }}">
+                    <div class="mb-3">
+                        <label for="pname" class="form-label">姓名</label>
+                        <input type="text" class="form-control" id="pname" name="pname" value="{{ player_to_edit.pname }}" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="tid_edit" class="form-label">队伍</label>
+                        <select class="form-select" id="tid_edit" name="tid" required>
+                            {% for team in all_teams %}
+                                <option value="{{ team.tid }}" {% if team.tid == player_to_edit.tid %}selected{% endif %}>{{ team.tname }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="country_edit" class="form-label">国家</label>
+                        <input type="text" class="form-control" id="country_edit" name="country" value="{{ player_to_edit.country }}">
+                    </div>
+                    <div class="mb-3">
+                        <label for="photo_url_edit" class="form-label">照片 URL</label>
+                        <input type="text" class="form-control" id="photo_url_edit" name="photo_url" value="{{ player_to_edit.photo_url }}" placeholder="请粘贴图片的完整网址，例如 https://...">
+                        {% if player_to_edit.photo_url %}
+                            <div class="mt-2">
+                                <small>当前照片预览:</small><br>
+                                <img src="{{ player_to_edit.photo_url }}" alt="Photo" width="100">
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div class="mb-3">
+                        <label for="rating_edit" class="form-label">Rating</label>
+                        <input type="number" step="0.01" class="form-control" id="rating_edit" name="player_rating" value="{{ player_to_edit.player_rating }}">
+                    </div>
+                    <button type="submit" class="btn btn-primary">更新</button>
+                    <a href="{{ url_for('list_players') }}" class="btn btn-secondary">取消</a>
+                </form>
+            </div>
+        </div>
+    {% else %}
+        <div class="card mb-4">
+            <div class="card-header"><h2>添加新选手</h2></div>
+            <div class="card-body">
+                <form method="POST" action="{{ url_for('add_player') }}">
+                    <div class="mb-3">
+                        <label for="pname_add" class="form-label">姓名</label>
+                        <input type="text" class="form-control" id="pname_add" name="pname" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="tid_add" class="form-label">队伍</label>
+                        <select class="form-select" id="tid_add" name="tid" required>
+                            {% for team in all_teams %}
+                                <option value="{{ team.tid }}">{{ team.tname }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="country_add" class="form-label">国家</label>
+                        <input type="text" class="form-control" id="country_add" name="country">
+                    </div>
+                    <div class="mb-3">
+                        <label for="photo_url_add" class="form-label">照片 URL</label>
+                        <input type="text" class="form-control" id="photo_url_add" name="photo_url" placeholder="请粘贴图片的完整网址，例如 https://...">
+                    </div>
+                    <div class="mb-3">
+                        <label for="rating_add" class="form-label">Rating</label>
+                        <input type="number" step="0.01" class="form-control" id="rating_add" name="player_rating">
+                    </div>
+                    <button type="submit" class="btn btn-primary">添加</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header"><h2>选手列表</h2></div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>照片</th>  <!-- 新增列 -->
+                                <th>姓名</th>
+                                <th>队伍</th>
+                                <th>国家</th>
+                                <th>Rating</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for player in players %}
+                            <tr>
+                                <td>{{ player.pid }}</td>
+                                <td>
+                                    {% if player.photo_url %}
+                                        <img src="{{ player.photo_url }}" alt="{{ player.pname }} photo" width="50" height="50">
+                                    {% else %}
+                                        <span class="text-muted">无</span>
+                                    {% endif %}
+                                </td>
+                                <td><a href="{{ url_for('player_detail', pid=player.pid) }}">{{ player.pname }}</a></td>
+                                <td>{{ player.tname }}</td>
+                                <td>{{ player.country }}</td>
+                                <td>{{ player.player_rating }}</td>
+                                <td>
+                                    <a href="{{ url_for('edit_player', pid=player.pid) }}" class="btn btn-sm btn-outline-primary">编辑</a>
+                                    <form method="POST" action="{{ url_for('delete_player', pid=player.pid) }}" class="d-inline">
+                                        <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('确定删除？')">删除</button>
+                                    </form>
+                                </td>
+                            </tr>
+                            {% else %}
+                            <tr>
+                                <td colspan="7" class="text-center">暂无数据</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}

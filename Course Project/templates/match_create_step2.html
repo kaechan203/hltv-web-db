@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}创建比赛 - 步骤2{% endblock %}
+{% block content %}
+    <div class="progress mb-4">
+        <div class="progress-bar" role="progressbar" style="width: 66%;" aria-valuenow="66" aria-valuemin="0" aria-valuemax="100">步骤 2/3</div>
+    </div>
+    <h1>创建新比赛 - 步骤 2：选择参赛选手</h1>
+    <div class="btn-group mb-4" role="group">
+        <a href="{{ url_for('match_create_step1') }}" class="btn btn-secondary">上一步</a>
+        <a href="{{ url_for('matches_manage') }}" class="btn btn-secondary">取消</a>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <form method="POST">
+                <h3>{{ team1_name }}</h3>
+                <div class="list-group mb-4">
+                    {% for player in players_team1 %}
+                    <label class="list-group-item">
+                        <input class="form-check-input me-1" type="checkbox" name="selected_players" value="{{ player.pid }}">
+                        {{ player.pname }}
+                    </label>
+                    {% endfor %}
+                </div>
+
+                <h3>{{ team2_name }}</h3>
+                <div class="list-group mb-4">
+                    {% for player in players_team2 %}
+                    <label class="list-group-item">
+                        <input class="form-check-input me-1" type="checkbox" name="selected_players" value="{{ player.pid }}">
+                        {{ player.pname }}
+                    </label>
+                    {% endfor %}
+                </div>
+
+                <button type="submit" class="btn btn-primary">下一步</button>
+            </form>
+        </div>
+    </div>
+{% endblock %}

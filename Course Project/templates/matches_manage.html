@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block title %}比赛管理{% endblock %}
+{% block content %}
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>比赛管理</h1>
+        <a href="{{ url_for('match_create_step1') }}" class="btn btn-success">添加新比赛</a>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>赛事</th>
+                            <th>日期</th>
+                            <th>阶段</th>
+                            <th>对阵</th>
+                            <th>赛果</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for match in matches %}
+                        <tr>
+                            <td>{{ match.match_id }}</td>
+                            <td>{{ match.tournament_name }}</td>
+                            <td>{{ match.match_time.strftime('%Y-%m-%d') }}</td>
+                            <td>{{ match.match_stage }}</td>
+                            <td>{{ match.team1_name }} vs {{ match.team2_name }}</td>
+                            <td>{{ match.team1_point }} - {{ match.team2_point }}</td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="6" class="text-center">暂无比赛数据</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block title %}赛事管理{% endblock %}
+{% block content %}
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>赛事管理</h1>
+        <a href="{{ url_for('tournament_add') }}" class="btn btn-success">添加新赛事</a>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>赛事名称</th>
+                            <th>状态</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for t in tournaments %}
+                        <tr>
+                            <td>{{ t.tournament_id }}</td>
+                            <td>{{ t.tournament_name }}</td>
+                            <td>
+                                {% if t.status == 0 %}
+                                    <span class="badge bg-secondary">未开始</span>
+                                {% elif t.status == 1 %}
+                                    <span class="badge bg-primary">进行中</span>
+                                {% elif t.status == 2 %}
+                                    <span class="badge bg-success">已结束</span>
+                                {% else %}
+                                    <span class="badge bg-dark">未知</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="3" class="text-center">暂无赛事数据，请先添加。</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock %}

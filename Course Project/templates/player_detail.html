@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}{{ player.pname }} - 选手详情{% endblock %}
+{% block content %}
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>{{ player.pname }}</h1>
+        <a href="{{ url_for('team_detail', tid=player.tid) }}" class="btn btn-secondary">返回队伍</a>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-body">
+            <h5 class="card-title">基本信息</h5>
+            <p><strong>所属队伍:</strong> {{ player.tname }}</p>
+            <p><strong>国家:</strong> {{ player.country }}</p>
+            <p><strong>综合 Rating:</strong> {{ player.player_rating }}</p>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header"><h2>参与的比赛</h2></div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead><tr><th>日期</th><th>阶段</th><th>对阵</th><th>操作</th></tr></thead>
+                    <tbody>
+                        {% for match in matches %}
+                        <tr>
+                            <td>{{ match.match_time.strftime('%Y-%m-%d') }}</td>
+                            <td>{{ match.match_stage }}</td>
+                            <td>{{ match.team1_name }} vs {{ match.team2_name }}</td>
+                            <td><a href="{{ url_for('match_detail', match_id=match.match_id) }}" class="btn btn-sm btn-primary">查看详情</a></td>
+                        </tr>
+                        {% else %}
+                        <tr><td colspan="4" class="text-center">暂无比赛数据</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock %}
